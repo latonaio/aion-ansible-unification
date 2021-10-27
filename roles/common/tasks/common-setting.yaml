@@ -11,35 +11,6 @@
 #     state: restarted
 #     enabled: yes
 
-- name: create service to enable fan at startup
-  become: yes
-  template:
-    src: enable-fan.service
-    dest: /etc/systemd/system/enable-fan.service
-    force: yes
-
-- name: enable fan now and at startup time
-  become: yes
-  systemd:
-    daemon_reload: yes
-    name: enable-fan.service
-    state: restarted
-    enabled: yes
-
-- name: create service to disable L4T-README drive
-  become: yes
-  template:
-    src: disable-l4t-readme-drive.service
-    dest: /etc/systemd/system/disable-l4t-readme-drive.service
-    force: yes
-
-- name: disable L4T-README drive from next boot time
-  become: yes
-  systemd:
-    daemon_reload: yes
-    name: disable-l4t-readme-drive.service
-    enabled: yes
-
 - name: disable turn scrren off when inactive
   shell: gsettings set org.gnome.desktop.session idle-delay 0
   become: no

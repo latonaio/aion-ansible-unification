@@ -10,7 +10,6 @@
     # - ssdboot
 
     - common
-    - cuda
     - docker
     - kubernetes
     - mysql

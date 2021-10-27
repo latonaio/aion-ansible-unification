@@ -7,7 +7,7 @@
 - name: export DOCKER_BUILDKIT
   shell: export DOCKER_BUILDKIT=1
 
-- name: change deamom.json for nvidia
+- name: change deamom.json for XXXX
   become: yes
   template:
     src: daemon.json
@@ -48,10 +48,3 @@
     name: docker
     state: started
     enabled: yes
-
-# NOTE: ファンがjatpack.4.4からjetson_performance.serviceで回らないため、
-# 一時的に回す
-# - name: run jetson fan
-#   become: yes
-#   shell: jetson_clocks
-#   ignore_errors: true

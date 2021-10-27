@@ -1,12 +1,12 @@
-# jetson-aion-ansible-unification
+# aion-ansible-unification
 
 ## 概要
-jetson-aion-ansible-unificationは、OSがインストールされたJetson/Ubuntuへの、aion-core、kubernetes、および関連リソースの環境構築を、自動で行うツールです。   
+aion-ansible-unificationは、対象デバイスにaion-core、kubernetes、および関連リソースの環境構築を、自動で行うツールです。   
 この環境構築には、必要なパッケージのインストールや、docker/kubernetesのセットアップ、その他リポジトリのクローンやdocker imageのpull等が含まれています。
 
 ## セットアップ手順
 I. local host(mac)にansibleをインストールする   
-II. remote host(Jetson/Ubuntu)でssh接続のための設定をする   
+II. remote hostでssh接続のための設定をする   
 III. local host(mac)でansibleの設定をする
 
 ### I.local hostにansibleをインストールする   
@@ -34,7 +34,7 @@ pip3 install ansible-core
 ```
 
 ### II.remote hostでssh接続のための設定をする   
-1. remote host(Jetson/Ubuntu等の対象端末)上でbitbucket SSH鍵を作成する
+1. remote host上でbitbucket SSH鍵を作成する
 ```
 cd ~
 mkdir .ssh
@@ -65,7 +65,7 @@ cat id_rsa.pub
 ### III.local hostでansibleの設定をする   
 1. このリポジトリをlocal host(mac)上にクローンし、該当のブランチに切り替える
 ```
-git clone git@bitbucket.org:latonaio/jetson-aion-ansible-unification.git
+git clone git@github.com:latonaio/aion-ansible-unification.git
 git checkout {ブランチ名}
 ```
 2. クローンしたリポジトリ内の `inventory` ファイルに端末情報を記載する   
@@ -98,7 +98,7 @@ smb_password: XXXXXXXX          # SC連携 Windowsのパスワード
 4. microSDやSSDから起動させる場合、`run.yaml`の`- sdboot`や`- ssdboot`行のコメントアウトを外す
 
 ## 使用方法
-jetson-aion-ansible-unificationディレクトリ配下で以下のコマンドを実行する
+aion-ansible-unificationディレクトリ配下で以下のコマンドを実行する
 ```
 ansible-playbook run.yaml  -i inventory --ask-become-pass --ask-vault-pass
 BECOME password: [remote host(対象端末)のpasswordを入力]
@@ -137,10 +137,7 @@ roleの一覧は `run.yaml` に記載、
 **common**    
   - `common-packages.yaml`：curlやpython3等必要なパッケージのインストール   
   - `common-setting.yaml` ：タイムゾーンやキーボードの設定   
-  - `go-install.yaml`     ：goenvを使用してgolangのインストール      
-
-**cuda**    
-  - `install.yaml`        ：cudaのインストール      
+  - `go-install.yaml`     ：goenvを使用してgolangのインストール           
 
 **docker**   
   - `install.yaml`        ：docker.ioのインストール      
@@ -175,7 +172,6 @@ roleの一覧は `run.yaml` に記載、
   roles: # 実行するコマンド群の定義
     # - ex
     # - common
-    # - cuda
     - docker
     # - kubernetes
     # - aion
