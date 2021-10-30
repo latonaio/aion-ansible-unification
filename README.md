@@ -1,16 +1,20 @@
 # aion-ansible-unification
 
 ## 概要
-aion-ansible-unificationは、対象デバイスにaion-core、kubernetes、および関連リソースの環境構築を、自動で行うツールです。   
-この環境構築には、必要なパッケージのインストールや、docker/kubernetesのセットアップ、その他リポジトリのクローンやdocker imageのpull等が含まれています。
+aion-ansible-unification は、対象デバイス もしくは 対象サーバー に対して、aion-core、kubernetes、および、関連リソース の環境構築を、自動で行うツールです。   
+aion-ansible-unification には、必要なパッケージのインストール、Docker / Kubernetes のセットアップ、その他リポジトリのクローン、Docker Images の Pull 等 が含まれています。
+
+## 動作環境
+* OS  : Linux OS  
+* CPU : ARM/AMD/Intel  
 
 ## セットアップ手順
-I. local host(mac)にansibleをインストールする   
-II. remote hostでssh接続のための設定をする   
-III. local host(mac)でansibleの設定をする
+I. local host(mac)にansibleをインストールします   
+II. remote hostでssh接続のための設定をします   
+III. local host(mac)でansibleの設定をします　　
 
-### I.local hostにansibleをインストールする   
-1. local host(mac)にansibleをインストールする
+### I.local host に ansible をインストールします     
+1. local host(mac)にansibleをインストールします  
 ```
 # install ansible
 brew install ansible
@@ -19,7 +23,7 @@ brew install ansible
 brew tap esolitos/ipa
 brew install sshpass
 ```
-2. local host(mac)に、jetson-aion-ansible-unification内で使用するモジュールをインストールする
+2. local host(mac)に、aion-ansible-unification内で使用するモジュールをインストールします  
 ```
 # docker_imageモジュールを使うためにインストール
 ansible-galaxy collection install community.docker
@@ -27,20 +31,20 @@ ansible-galaxy collection install community.docker
 # set_timezoneモジュールを使うためにインストール   
 ansible-galaxy collection install community.general   
 ```
-3. ansible coreを2.11.1にする   
+3. ansible coreを2.11.1にします   
   （[kubernetes : Add Google Cloud Offical key]でエラーが出るため）
 ```
 pip3 install ansible-core
 ```
 
-### II.remote hostでssh接続のための設定をする   
-1. remote host上でbitbucket SSH鍵を作成する
+### II.remote hostで ssh接続 のための設定をします(下記の例ではCI/CDツールとして Bitbucket を利用)     
+1. remote host上で SSH鍵を作成します  
 ```
 cd ~
 mkdir .ssh
 cd .ssh
 vim config
-⇒以下の内容でファイルを作成する
+⇒以下の内容でファイルを作成します
 ==========
 Host bitbucket.org
     User git
@@ -51,25 +55,24 @@ Host bitbucket.org
     IdentitiesOnly yes
 ==========
 ssh-keygen -t rsa
-  ⇒質問されるので、最初だけ/home/ユーザ名/.ssh/id_rsaと入力。それ以外はすべてエンターで抜ける
+  ⇒質問されるので、最初だけ/home/ユーザ名/.ssh/id_rsaと入力。それ以外はすべてエンターで抜けます  
 cat id_rsa.pub
-  ⇒公開鍵が表示されるので、選択してコピーする
+  ⇒公開鍵が表示されるので、選択してコピーします 
 ```
-2. bitbucketに公開鍵を登録する
-  Bitbucketを開き、左下ユーザアイコン>Personal settings>SSH鍵>鍵を追加を選択   
-    Label: 「案件*-端末名（例：aisin-cat01）」
-    Key: 「コピーした公開鍵」
-  を入力し、鍵を追加する   
-  ※ 開発ならdevelop
+2. Bitbucket に公開鍵を登録します  
+  Bitbucket を開き、左下ユーザアイコン>Personal settings>SSH鍵>鍵を追加を選択      
+    Label: 「案件*-端末名（例：vega）」  
+    Key: 「コピーした公開鍵」  
+  を入力し、鍵を追加します    
 
-### III.local hostでansibleの設定をする   
-1. このリポジトリをlocal host(mac)上にクローンし、該当のブランチに切り替える
+### III.local host で ansible の設定をします   
+1. このリポジトリをlocal host(mac)上にクローンし、該当のブランチに切り替えます  
 ```
 git clone git@github.com:latonaio/aion-ansible-unification.git
 git checkout {ブランチ名}
 ```
-2. クローンしたリポジトリ内の `inventory` ファイルに端末情報を記載する   
-  remote host(対象端末)のIPアドレスは、remote hostのterminalで `ifconfig` をすると検索できる
+2. クローンしたリポジトリ内の `inventory` ファイルに端末情報を記載します   
+  remote host(対象端末)のIPアドレスは、remote hostのterminalで `ifconfig` をすると検索できます  
 ```
 [edge]
 192.168.xxx.xxx             # remote host(対象端末)のIPアドレス
@@ -95,10 +98,10 @@ smb_workgroup: WORKGROUP        # SC連携 Windowsのワークグループ名
 smb_user: test                  # SC連携 Windowsのユーザー名
 smb_password: XXXXXXXX          # SC連携 Windowsのパスワード
 ```
-4. microSDやSSDから起動させる場合、`run.yaml`の`- sdboot`や`- ssdboot`行のコメントアウトを外す
+4. microSDやSSDから起動させる場合、`run.yaml`の`- sdboot`や`- ssdboot`行のコメントアウトを外します  
 
 ## 使用方法
-aion-ansible-unificationディレクトリ配下で以下のコマンドを実行する
+aion-ansible-unificationディレクトリ配下で以下のコマンドを実行します  
 ```
 ansible-playbook run.yaml  -i inventory --ask-become-pass --ask-vault-pass
 BECOME password: [remote host(対象端末)のpasswordを入力]
@@ -111,7 +114,7 @@ Vault password: [api_access_keyの暗号復元のためのpasswordを入力]
 [DEPRECATION WARNING]: Distribution Ubuntu 18.04 on host 192.168.XXX.XXX should use /usr/bin/python3, but is using /usr/bin/python for backward
 compatibility with prior Ansible releases.
 ```
-`whereis python3`の実行結果を、`ansible.cfg`内の interpreter_python= 以降に追加   
+`whereis python3`の実行結果を、`ansible.cfg`内の interpreter_python= 以降に追加します。     
 例）
 ```
 interpreter_python=/usr/bin/python3
@@ -121,8 +124,8 @@ interpreter_python=/usr/bin/python3
 ## ファイル構成
 ### 実行するrole,taskの一覧
 roleの一覧は `run.yaml` に記載、   
-各role内で行うtaskの一覧は、`roles/{各role名のフォルダ}/tasks/main.yaml` に記載、   
-実行するtaskの詳細はそれぞれのtaskフォルダ内の各yamlファイルに記載されている。 
+各role内で行うtaskの一覧は、`roles/{各role名のフォルダ}/tasks/main.yaml` に記載されています。     
+実行するtaskの詳細は、それぞれのtaskフォルダ内の各yamlファイルに記載されていされています。   
   
 **sdboot**:   
   - `common-setting.yaml` ：スクリーンロック無効化などの設定   
@@ -162,8 +165,8 @@ roleの一覧は `run.yaml` に記載、
   - `docker-build.yaml`      ：AionCore, DataSweeperのimageをbuild   
    
 ### ansible-playbookの使い方
-一部のtaskのみを実行したい場合、実行しない部分をコメントアウトすれば良い。   
-例えばdockerタスクのsetting.yamlの内容のみ実行したい場合、以下の通りコメントアウトする。
+一部のtaskのみを実行したい場合、実行しない部分をコメントアウトすれば良いです。   
+例えば、dockerタスクのsetting.yamlの内容のみ実行したい場合、以下の通りコメントアウトします。
 ```
 [run.yaml]
 ---
@@ -184,7 +187,7 @@ roleの一覧は `run.yaml` に記載、
 - include: setting.yaml
 ```
 
-### クローンするリポジトリやpullするdocker imageの設定
-クローンするリポジトリ名とブランチの一覧、pullするdocker imageの一覧は、`roles/{各role名のフォルダ}/vars/clone-repositories.yaml` または `roles/{各role名のフォルダ}/vars/pull-images.yaml` 内に記載されている。   
-クローンやpullの必要がないものはコメントアウトしたり、リポジトリごとにクローンしてくるブランチを設定したりして使用できる。
+### クローンするリポジトリや pull する Docker Images の設定
+クローンするリポジトリ名とブランチの一覧、pull する Docker Images の一覧は、`roles/{各role名のフォルダ}/vars/clone-repositories.yaml` または `roles/{各role名のフォルダ}/vars/pull-images.yaml` 内に記載されています。   
+クローンやpullの必要がないものはコメントアウトしたり、リポジトリごとにクローンしてくるブランチを設定したりして、使用できます。
 
